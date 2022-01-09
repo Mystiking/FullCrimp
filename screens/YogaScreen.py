@@ -5,15 +5,14 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.image import Image
 from src.TrainingType import TrainingType
-from src.RunningSession import RunningSession
-from datetime import date
+from src.YogaSession import YogaSession
 from custom_kivy.FloatInput import FloatInput
 from custom_kivy.TimeInput import TimeInput
 
 
-class RunningScreen(Screen):
+class YogaScreen(Screen):
     def __init__(self, **kwargs):
-        super(RunningScreen, self).__init__(**kwargs)
+        super(YogaScreen, self).__init__(**kwargs)
 
         layout = BoxLayout(padding=50, orientation='vertical')
 
@@ -58,32 +57,23 @@ class RunningScreen(Screen):
 
         # Location label and button
         location_layout = BoxLayout(orientation='vertical')
-        self.location_label = Label(text="[color=#404040]Location[/color]", pos_hint={'x': 0., 'y': .5}, markup=True)
-        self.location_input_field = TextInput(text="Copenhagen")
-        location_layout.add_widget(self.location_label)
+        location_label = Label(text="[color=#404040]Location[/color]", pos_hint={'x': 0., 'y': .5}, markup=True)
+        self.location_input_field = TextInput(text="")
+        location_layout.add_widget(location_label)
         location_layout.add_widget(self.location_input_field)
-
-        # Distance label and button
-        distance_layout = BoxLayout(orientation='vertical')
-        distance_label = Label(text="[color=#404040]Distance[/color]", pos_hint={'x': 0., 'y': .5}, markup=True)
-        self.distance_input_field = FloatInput()
-        distance_layout.add_widget(distance_label)
-        distance_layout.add_widget(self.distance_input_field)
 
         body_layout.add_widget(date_layout)
 
         body_layout.add_widget(duration_layout)
 
-        body_layout.add_widget(distance_layout)
-
         body_layout.add_widget(location_layout)
 
         button_layout = BoxLayout(orientation='vertical')
-        button = Button(text="Add Running Session",
+        button = Button(text="Add Yoga Session",
                         background_color=[0.24, 0.44, 0.40, 1.0],
                         pos_hint={'center_x': .5, "center_y": .5},
                         size_hint=(0.5, 1))
-        button.bind(on_release=self.add_running_session)
+        button.bind(on_release=self.add_yoga_session)
         button_layout.add_widget(Label(text=""))
         button_layout.add_widget(button)
 
@@ -94,24 +84,22 @@ class RunningScreen(Screen):
     def screen_transition(self, instance):
         self.manager.current = "welcome"
 
-    def add_running_session(self, instance):
-        RunningSession(duration=self.duration_input_field.to_seconds(),
-                       location=self.location_input_field.text,
-                       training_type=TrainingType.RUNNING,
-                       user_id=self.parent.current_user.id,
-                       distance=float(self.distance_input_field.text),
-                       performed_at=self.parent.chosen_date).create()
+    def add_yoga_session(self, instance):
+        YogaSession(duration=self.duration_input_field.to_seconds(),
+                    location=self.location_input_field.text,
+                    training_type=TrainingType.YOGA,
+                    user_id=self.parent.current_user.id,
+                    performed_at=self.parent.chosen_date).create()
         self.screen_transition(instance)
 
     def date_picker_transition(self, instance):
         self.manager.transition.direction = "left"
-        self.parent.previous = "running"
+        self.parent.previous = "yoga"
         self.manager.current = "date_picker"
 
     def on_pre_enter(self, *args):
         self.date_label.text = "[color=#404040]Date: {0}[/color]".format(self.parent.chosen_date)
-        # TODO: Change default location to cached location
-        self.location_label.text = "[color=#404040]Location[/color]"
+        self.location_input_field.text = self.parent.current_user.default_location
 
     def welcome(self, instance):
         self.manager.transition.direction = "right"

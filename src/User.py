@@ -6,6 +6,7 @@ class User(object):
     id: int
     name: str
     username: str
+    default_location: str
 
     class UsernameOrPasswordWrong(Exception):
         pass
@@ -14,6 +15,7 @@ class User(object):
         self.id = id
         self.name = name
         self.username = username
+        self.default_location = "Home"
 
     @staticmethod
     def get_user(username: str, password: str):

@@ -1,6 +1,7 @@
 from kivy.uix.button import Button
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.image import Image
+from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 
 
@@ -9,17 +10,56 @@ class WelcomeScreen(Screen):
         super(WelcomeScreen, self).__init__(**kwargs)
 
         layout = BoxLayout(padding=50, orientation='vertical')
-        self.label = Label(text="WELCOME", size_hint=(1, .5))
-        layout.add_widget(self.label)
-        button = Button(text="Add Session",
-                        background_color=[0.0, 1.0, 0.0, 1.0])
-        button.bind(on_release=self.screen_transition)
-        layout.add_widget(button)
+        label = Label(text="[color=#404040][font=assets/fonts/vonique/Vonique64.ttf]Fu llC r i m p[/font][/color]", size_hint=(1, .5),
+                      markup=True, font_size=26)
+
+        logo = Image(source='assets/logo/logo_eliptic.png',
+                     size_hint=(1.0, 1.0),
+                     pos_hint={'center_x': .5, "center_y": .5})
+
+        layout.add_widget(logo)
+        layout.add_widget(label)
+
+        self.personal_label = Label(text="[color=#404040]Welcome[/color]",
+                                    size_hint=(1, .5),
+                                    markup=True,
+                                    font_size=20)
+        layout.add_widget(self.personal_label)
+
+        add_session_layout = BoxLayout(padding=5, orientation='vertical', size_hint=(1.0, .65))
+        add_session_button = Button(text="Add New Session",
+                                    background_color=[0.24, 0.44, 0.40, 1.0])
+        add_session_button.bind(on_release=self.add_new_sessions_transition)
+        add_session_layout.add_widget(add_session_button)
+
+        data_layout = BoxLayout(padding=5, orientation='vertical', size_hint=(1.0, .65))
+        data_button = Button(text="View data",
+                             background_color=[0.8, 0.8, 0.8, 1.0])
+        data_button.bind(on_release=self.view_data)
+        data_layout.add_widget(data_button)
+
+        layout.add_widget(add_session_layout)
+        layout.add_widget(data_layout)
+
+        logout_layout = BoxLayout(padding=5, orientation='vertical', size_hint=(1.0, .65))
+        logout_button = Button(text="Logout",
+                               background_color=[0.8, 0.1, 0.1, 1.0])
+        logout_button.bind(on_release=self.logout)
+        logout_layout.add_widget(logout_button)
+
+        layout.add_widget(logout_layout)
         self.add_widget(layout)
 
-    def screen_transition(self, instance):
-        print(self.parent.current_user)
+    def add_new_sessions_transition(self, instance):
         self.manager.current = "training_session"
+        self.manager.transition.direction = "left"
+
+    def logout(self, *args):
+        self.manager.current = "login"
+        self.manager.transition.direction = "right"
 
     def on_pre_enter(self, *args):
-        self.label.text = "WELCOME " + self.parent.current_user.name
+        self.personal_label.text = "[color=#404040]Welcome, {0}![/color]".format(self.parent.current_user.name)
+
+    def view_data(self, *args):
+        print("Not implemented yet.")

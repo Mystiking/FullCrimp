@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import date
-from TrainingType import TrainingType
-from TrainingSession import TrainingSession
+from src.TrainingType import TrainingType
+from src.TrainingSession import TrainingSession
 
 
 class YogaSession(TrainingSession):
