@@ -6,3 +6,4 @@ class TrainingType(Enum):
     STRENGTH = 1
     CLIMBING = 2
     RUNNING = 3
+    HANGBOARD = 4

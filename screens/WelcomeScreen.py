@@ -32,14 +32,18 @@ class WelcomeScreen(Screen):
         add_session_button.bind(on_release=self.add_new_sessions_transition)
         add_session_layout.add_widget(add_session_button)
 
+        add_weight_layout = BoxLayout(padding=5, orientation='vertical', size_hint=(1.0, .65))
+        add_weight_button = Button(text="Add new weight",
+                                   background_color=[0.24, 0.44, 0.40, 1.0])
+        add_weight_button.bind(on_release=self.add_new_weight_transition)
+        add_weight_layout.add_widget(add_weight_button)
+
+        data_and_logout_layout = BoxLayout(orientation='vertical', size_hint=(1.0, .65))
         data_layout = BoxLayout(padding=5, orientation='vertical', size_hint=(1.0, .65))
         data_button = Button(text="View data",
                              background_color=[0.8, 0.8, 0.8, 1.0])
         data_button.bind(on_release=self.view_data)
         data_layout.add_widget(data_button)
-
-        layout.add_widget(add_session_layout)
-        layout.add_widget(data_layout)
 
         logout_layout = BoxLayout(padding=5, orientation='vertical', size_hint=(1.0, .65))
         logout_button = Button(text="Logout",
@@ -47,12 +51,21 @@ class WelcomeScreen(Screen):
         logout_button.bind(on_release=self.logout)
         logout_layout.add_widget(logout_button)
 
-        layout.add_widget(logout_layout)
+        data_and_logout_layout.add_widget(data_layout)
+        data_and_logout_layout.add_widget(logout_layout)
+
+        layout.add_widget(add_session_layout)
+        layout.add_widget(add_weight_layout)
+        layout.add_widget(data_and_logout_layout)
         self.add_widget(layout)
 
     def add_new_sessions_transition(self, instance):
-        self.manager.current = "training_session"
         self.manager.transition.direction = "left"
+        self.manager.current = "training_session"
+
+    def add_new_weight_transition(self, instance):
+        self.manager.transition.direction = "left"
+        self.manager.current = "weight"
 
     def logout(self, *args):
         self.manager.current = "login"

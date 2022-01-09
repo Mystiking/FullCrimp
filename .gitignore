@@ -7,3 +7,4 @@
 db/fullcrimp.db
 *.pyc
 .cache/.logincache
+.cache/.hangboard_cache

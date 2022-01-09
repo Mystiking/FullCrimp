@@ -22,6 +22,11 @@ from screens.GradePickerScreen import GradePickerScreen
 from screens.BoulderingScreen import BoulderingScreen
 from screens.HomeWallScreen import HomeWallScreen
 from screens.GymPickerScreen import GymPickerScreen
+from screens.WeightScreen import WeightScreen
+from screens.StrengthScreen import StrengthScreen
+from screens.StrengthSessionScreen import StrengthSessionScreen
+from screens.HangboardScreen import HangboardScreen
+from screens.HangboardSessionScreen import HangboardSessionScreen
 
 from src.ScreenManagement import ScreenManagement
 
@@ -55,6 +60,11 @@ class MainApp(App):
         self.screen_manager.add_widget(GymPickerScreen(name="gym_picker"))
         self.screen_manager.add_widget(BoulderingScreen(name="bouldering"))
         self.screen_manager.add_widget(HomeWallScreen(name="home_wall"))
+        self.screen_manager.add_widget(WeightScreen(name="weight"))
+        self.screen_manager.add_widget(StrengthScreen(name="strength"))
+        self.screen_manager.add_widget(HangboardScreen(name="hangboard"))
+        self.screen_manager.add_widget(HangboardSessionScreen(name="hangboard_session"))
+        self.screen_manager.add_widget(StrengthSessionScreen(name="strength_session"))
 
         self.screen_manager.current = "login"
 
