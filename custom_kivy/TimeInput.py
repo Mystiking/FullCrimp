@@ -20,7 +20,7 @@ class TimeInput(TextInput):
             return 0
 
         if self.text.count(':') == 0:
-            return int(self.text) * 60
+            return int(self.text)
 
         if self.text.count(':') == 1:
             minutes, seconds = self.text.split(':')

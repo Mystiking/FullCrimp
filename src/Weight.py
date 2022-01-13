@@ -30,4 +30,20 @@ class Weight(object):
 
         return c.lastrowid
 
+    @staticmethod
+    def get_latest_weight(user_id):
+        conn = sqlite3.connect('db/fullcrimp.db')
+        c = conn.cursor()
 
+        c.execute("""
+        SELECT * FROM weight
+        WHERE user_id = {0}
+        ORDER BY weighed_at DESC;
+        """.format(user_id))
+
+        most_recent_weight = c.fetchone()
+
+        if most_recent_weight is None:
+            return None
+
+        return most_recent_weight[1]

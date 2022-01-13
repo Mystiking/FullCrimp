@@ -51,7 +51,7 @@ class HangboardSessionScreen(Screen):
         self.date_label = Label(text="[color=#404040]Date[/color]",
                                 pos_hint={'x': 0., 'y': .5},
                                 markup=True)
-        date_button = Button(text="Select other date",
+        date_button = Button(text="Select date",
                              background_color=[0.24, 0.44, 0.40, 1.0],
                              size_hint=(0.5, 1),
                              pos_hint={'center_x': .5, "center_y": .5})

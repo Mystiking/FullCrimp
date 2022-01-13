@@ -1,3 +1,7 @@
+import sqlite3
+from datetime import date
+
+
 class StrengthTest9c(object):
     points_to_grade = {
         1: '6a',
@@ -48,8 +52,31 @@ class StrengthTest9c(object):
         'Front_Lever': [5, 10, 20, 30]
     }
 
-    def __init__(self):
-        pass
+    def __init__(self,
+                 weight: float,
+                 core_level: str,
+                 core_time: float,
+                 pull_up_weight: float,
+                 hangtime: float,
+                 hangboard_weight: float,
+                 performed_at: date = date.today()):
+        self.weight = weight
+        self.core_level = core_level
+        self.core_time = core_time
+        self.pull_up_weight = pull_up_weight
+        self.hangtime = hangtime
+        self.hangboard_weight = hangboard_weight
+        self.performed_at = performed_at
+
+    def calc_points_and_grade(self):
+        core_points = self.calc_max_core_points(self.core_level, self.core_time)
+        pull_up_points = self.calc_max_pull_up_strength_points(self.weight, self.pull_up_weight)
+        hangtime_points = self.calc_max_hang_points(self.hangtime)
+        hangboard_points = self.calc_max_finger_strength_points(self.weight, self.hangboard_weight)
+        return {'core': core_points,
+                'pull_up': pull_up_points,
+                'hang_time': hangtime_points,
+                'hang_board': hangboard_points}, self.convert_to_grade(core_points + pull_up_points + hangboard_points + hangtime_points)
 
     def calc_max_finger_strength_points(self, weight, added_weight):
         added_weight_ratio = added_weight / weight
@@ -141,3 +168,27 @@ class StrengthTest9c(object):
 
     def convert_to_grade(self, points):
         return self.points_to_grade[points]
+
+    def create(self, user_id: int):
+        points, grade = self.calc_points_and_grade()
+        point_sum = points['core'] + points['pull_up'] + points['hang_time'] + points['hang_board']
+
+        conn = sqlite3.connect('db/fullcrimp.db')
+        c = conn.cursor()
+
+        c.execute("""
+                INSERT INTO strength_test_9c
+                (performed_at, weight, core_level, core_time, pull_up_weight, hang_time, hang_board_weight, grade, points, user_id) VALUES
+                ('{0}', {1}, '{2}', {3}, {4}, {5}, {6}, '{7}', {8}, {9})
+                """.format(self.performed_at,
+                           self.weight,
+                           self.core_level,
+                           self.core_time,
+                           self.pull_up_weight,
+                           self.hangtime,
+                           self.hangboard_weight,
+                           grade,
+                           point_sum,
+                           user_id))
+
+        conn.commit()

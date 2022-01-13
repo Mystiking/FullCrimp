@@ -41,7 +41,7 @@ class User(object):
         """.format(username))
 
         usernames = c.fetchone()
-        if len(usernames) > 0:
+        if usernames is not None and len(usernames) > 0:
             raise Exception("Username already in use.")
 
         c.execute("""

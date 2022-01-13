@@ -27,6 +27,7 @@ from screens.StrengthScreen import StrengthScreen
 from screens.StrengthSessionScreen import StrengthSessionScreen
 from screens.HangboardScreen import HangboardScreen
 from screens.HangboardSessionScreen import HangboardSessionScreen
+from screens.StrengthTestScreen import StrengthTestScreen
 
 from src.ScreenManagement import ScreenManagement
 
@@ -65,6 +66,7 @@ class MainApp(App):
         self.screen_manager.add_widget(HangboardScreen(name="hangboard"))
         self.screen_manager.add_widget(HangboardSessionScreen(name="hangboard_session"))
         self.screen_manager.add_widget(StrengthSessionScreen(name="strength_session"))
+        self.screen_manager.add_widget(StrengthTestScreen(name="strength_test"))
 
         self.screen_manager.current = "login"
 
