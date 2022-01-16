@@ -109,6 +109,8 @@ class LoginScreen(Screen):
                 self.password_input_field.text = data[1]
 
     def cache_login_info(self):
+        if not os.path.isdir('.cache'):
+            os.mkdir('.cache')
         with open('.cache/.logincache', 'w') as fh:
             fh.write('{0} {1}'.format(self.username_input_field.text, self.password_input_field.text))
 

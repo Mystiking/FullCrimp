@@ -104,7 +104,7 @@ class RopeClimbingScreen(Screen):
         self.add_widget(layout)
 
     def add_rope_climbing_session(self, instance):
-        ClimbingSession(duration=float(self.duration_input_field.text) if self.duration_input_field.text != '' else 0.0,
+        ClimbingSession(duration=self.duration_input_field.to_seconds(),
                         location="",
                         training_type=TrainingType.CLIMBING,
                         user_id=self.parent.current_user.id,

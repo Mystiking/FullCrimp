@@ -76,7 +76,7 @@ class HomeWallScreen(Screen):
         self.add_widget(layout)
 
     def add_home_wall_session(self, instance):
-        ClimbingSession(duration=float(self.duration_input_field.text),
+        ClimbingSession(duration=self.duration_input_field.to_seconds(),
                         location="",
                         training_type=TrainingType.CLIMBING,
                         user_id=self.parent.current_user.id,
