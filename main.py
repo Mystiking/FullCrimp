@@ -31,6 +31,79 @@ from screens.StrengthTestScreen import StrengthTestScreen
 
 from src.ScreenManagement import ScreenManagement
 
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.scrollview import ScrollView
+from custom_kivy.CenteredTextInput import CenteredTextInput
+from kivy.uix.image import Image
+from kivy.core.window import Window
+from kivy.uix.scatter import ScatterPlane
+
+import cv2
+
+def resize(src, factor, interpolation=cv2.INTER_AREA):
+    """ Resizes an image by the specified factor keeping the aspect ratio
+
+    :param src: Image to be resized
+    :param scale: Resize factor
+    :param interpolation:
+    :return: Resized image
+    """
+    height = src.shape[0]
+    width = src.shape[1]
+    dimensions = (int(height*factor), int(width*factor))
+    return cv2.resize(src, dimensions, interpolation=interpolation)
+
+def addToImage(pos):
+    s = 'assets/logo/logo_eliptic.png'
+
+    i = cv2.imread(s)
+    i2 = resize(i, 0.25)
+    i[pos[0]:pos[0]+i2.shape[0], pos[1]:pos[1]+i2.shape[1]] = i2
+    o = 'assets/logo/logo_eliptic_temp.png'
+    cv2.imwrite(o, i)
+
+    return o
+
+
+class MyImage(Image):
+
+    points = []
+    scatterPlane = None
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            touch.grab(self)
+            self.points = [*touch.pos]
+            self.reload()
+            print(self.points, "" if (self.scatterPlane is None) else self.scatterPlane.scale)
+
+            s = addToImage([int(p) for p in self.points])
+            self.source = s
+            self.reload()
+        return super().on_touch_down(touch)
+
+    def on_touch_move(self, touch):
+        if touch.grab_current == self:
+            self.points.extend(touch.pos)
+        return super().on_touch_move(touch)
+
+    def on_touch_up(self, touch):
+        if touch.grab_current == self:
+            touch.ungrab(self)
+            self.points.extend(touch.pos)
+        return super().on_touch_up(touch)
+
+    def clear(self):
+        self.points = []
+
+
+class MyScatterPlane(ScatterPlane):
+    def on_touch_down(self, touch):
+        return super().on_touch_down(touch)
 
 class MainApp(App):
     screen_manager: ScreenManager
@@ -38,7 +111,17 @@ class MainApp(App):
 
     def build(self):
         Window.clearcolor = (0.93, 0.95, 0.96, 1)
+
+        sv = MyScatterPlane(scale=1)
+        logo = MyImage(source='assets/logo/logo_eliptic.png',
+                       size_hint=(None, None),
+                       size=Window.size)
+        logo.scatterPlane = sv
+        sv.add_widget(logo)
+
+        return sv
         # self.current_user = User.create_user("Louise1337", "password", "Louise")
+        '''
         self.screen_manager = ScreenManagement()
 
         self.screen_manager.chosen_date = date.today()
@@ -71,6 +154,7 @@ class MainApp(App):
         self.screen_manager.current = "login"
 
         return self.screen_manager
+        '''
 
 
 if __name__ == '__main__':
