@@ -57,22 +57,34 @@ def resize(src, factor, interpolation=cv2.INTER_AREA):
     dimensions = (int(height*factor), int(width*factor))
     return cv2.resize(src, dimensions, interpolation=interpolation)
 
-def addToImage(pos):
-    s = 'assets/logo/logo_eliptic.png'
 
-    i = cv2.imread(s)
-    i2 = resize(i, 0.25)
-    i[pos[0]:pos[0]+i2.shape[0], pos[1]:pos[1]+i2.shape[1]] = i2
-    o = 'assets/logo/logo_eliptic_temp.png'
-    cv2.imwrite(o, i)
+def addToImage(src, pos, createNew):
+    img = cv2.imread(src)
 
-    return o
+    grade6C = cv2.imread("assets/grades/6C.png")
+    grade7A = cv2.imread("assets/grades/7A.png")
+
+    gradeImg = grade6C
+    yoffset = int(max(pos[0] - gradeImg.shape[1] / 2, 0))
+    xoffset = int(max(img.shape[0] - pos[1] - gradeImg.shape[0] / 2, 0))
+    img[xoffset:xoffset+gradeImg.shape[0], yoffset:yoffset+gradeImg.shape[1]] = gradeImg
+    if createNew:
+        filename = src.split("/")[-1]
+        filename = filename[:filename.index(".")] + "new.png"
+        filename = "/".join(src.split("/")[:-1]) + "/" + filename
+    else:
+        filename = src
+    cv2.imwrite(filename, img)
+
+    return filename
 
 
 class MyImage(Image):
 
     points = []
     scatterPlane = None
+
+    newImageCreated = False
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
@@ -81,7 +93,8 @@ class MyImage(Image):
             self.reload()
             print(self.points, "" if (self.scatterPlane is None) else self.scatterPlane.scale)
 
-            s = addToImage([int(p) for p in self.points])
+            s = addToImage(self.source, [int(p) for p in self.points], not self.newImageCreated)
+            self.newImageCreated = True
             self.source = s
             self.reload()
         return super().on_touch_down(touch)
@@ -105,6 +118,7 @@ class MyScatterPlane(ScatterPlane):
     def on_touch_down(self, touch):
         return super().on_touch_down(touch)
 
+
 class MainApp(App):
     screen_manager: ScreenManager
     current_user: User
@@ -113,7 +127,7 @@ class MainApp(App):
         Window.clearcolor = (0.93, 0.95, 0.96, 1)
 
         sv = MyScatterPlane(scale=1)
-        logo = MyImage(source='assets/logo/logo_eliptic.png',
+        logo = MyImage(source='assets/gym/gym_test.png',
                        size_hint=(None, None),
                        size=Window.size)
         logo.scatterPlane = sv
