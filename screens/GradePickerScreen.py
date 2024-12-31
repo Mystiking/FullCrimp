@@ -66,7 +66,7 @@ class GradePickerScreen(Screen):
         self.add_widget(self.layout)
 
     def select_grade(self, instance):
-        self.parent.chosen_date = self.date_input_field.date
+        self.parent.chosen_date = self.date_input_field.date_set
         self.manager.transition.direction = "right"
         self.manager.current = self.parent.previous
 

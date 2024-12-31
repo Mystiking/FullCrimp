@@ -12,11 +12,6 @@ import os
 from src.User import User
 
 
-class MyImage(Image):
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            print(self.source)
-
 class LoginScreen(Screen):
     def __init__(self, **kwargs):
         super(LoginScreen, self).__init__(**kwargs)
@@ -24,7 +19,6 @@ class LoginScreen(Screen):
         layout = BoxLayout(padding=50, orientation='vertical')
         label = Label(text="[color=#404040][font=assets/fonts/vonique/Vonique64.ttf]Fu llC r i m p[/font][/color]", size_hint=(1, .5),
                       markup=True, font_size=26)
-
 
         sv = ScrollView(size=(1.0, 1.0))
         logo = Image(source='assets/logo/logo_eliptic.png',
@@ -125,7 +119,7 @@ class LoginScreen(Screen):
 
     def screen_transition(self):
         self.manager.transition.direction = "left"
-        self.manager.current = "welcome"
+        self.manager.current = "MainMenu"
 
     def login(self, username: str, password: str):
         try:
