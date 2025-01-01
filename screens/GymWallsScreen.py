@@ -15,8 +15,7 @@ from functools import cmp_to_key
 
 from kivy.core.window import Window
 from kivy.uix.scatter import Scatter
-
-import cv2
+import imageio.v3 as iio
 
 from enum import Enum
 from src.Grade import GradeEnum
@@ -60,7 +59,7 @@ class GymWallsScreen(Screen):
         scatter.do_rotation = False
         scatter.auto_bring_to_front = False
 
-        gym_size = cv2.imread('assets/gym/SG_hallen.png').shape
+        gym_size = np.array(iio.imread('assets/gym/SG_hallen.png')).shape
         self.gym_image = InteractiveImage(source='assets/gym/SG_hallen.png',
                                           # size_hint=(1.0, 1.0),
                                           size=(gym_size[0] * 0.75, gym_size[1] * 0.75))

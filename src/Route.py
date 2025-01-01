@@ -1,10 +1,10 @@
 from src.Grade import GradeEnum
 import numpy as np
-import cv2
 import sqlite3
 from typing import List
-from datetime import date, datetime
+from datetime import date
 import math
+import imageio.v3 as iio
 
 
 class Route(object):
@@ -34,10 +34,11 @@ class Route(object):
         self.max = [self.y_offset + self.img.shape[0], self.x_offset + self.img.shape[1]]
 
     def update_thumbnail_with_route_color(self):
-        hold_pixel_color = cv2.imread("assets/gym/hold_colors/" + self.hold_color + ".png")[3:-3, 3:-3][0, 0]
+        hold_pixel_color = np.array(iio.imread("assets/gym/hold_colors/" + self.hold_color + ".png")[3:-3, 3:-3][0, 0])
         if np.sum(hold_pixel_color) == 0:
-            hold_pixel_color = [3, 3, 3]
-        self.img = cv2.imread(self.route_thumbnails + self.grade.value + ".png")
+            hold_pixel_color = np.array([3, 3, 3])
+        hold_pixel_color = np.append(hold_pixel_color, [255], 0)
+        self.img = np.array(iio.imread(self.route_thumbnails + self.grade.value + ".png"))
         img_center = [self.img.shape[0] / 2, self.img.shape[1] / 2]
         radius = 20
         for i in range(self.img.shape[0]):

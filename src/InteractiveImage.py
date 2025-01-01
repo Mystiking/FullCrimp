@@ -4,7 +4,7 @@ from src.ProblemCreationState import ProblemCreationState
 from src.Grade import GradeEnum
 from src.Route import Route
 
-import cv2
+import imageio.v3 as iio
 import numpy as np
 
 
@@ -27,7 +27,7 @@ class InteractiveImage(Image):
         if not self.newImageCreated:
             self.original_source = self.source
 
-        img = cv2.imread(self.source)
+        img = np.array(iio.imread(self.source))
         for route in self.routes:
             y_offset = route.x_offset
             x_offset = route.y_offset
@@ -68,7 +68,7 @@ class InteractiveImage(Image):
 
         self.newImageCreated = True
 
-        cv2.imwrite(filename, img)
+        iio.imwrite(filename, img)
         self.source = filename
         self.reload()
 
