@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 
-if __name__ == '__main__':
+def initialize_database():
     database = 'db/fullcrimp.db'
     conn = sqlite3.connect(database)
 
@@ -16,3 +16,7 @@ if __name__ == '__main__':
             c.execute(data)
 
     conn.commit()
+
+
+if __name__ == '__main__':
+    initialize_database()
